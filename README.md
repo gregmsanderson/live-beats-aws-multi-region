@@ -10,15 +10,13 @@ There are two folders:
 
 ## Prerequisites
 
-You will need:
+1. An AWS account. Even if you already have an AWS account, we **strongly** recommend creating a new one. That limits the impact of adverse events. You can group accounts within an [AWS Organization](https://docs.aws.amazon.com/controltower/latest/userguide/organizations.html) to avoid having to repeatedly enter your billing details.
 
-1. The [AWS CDK](https://docs.aws.amazon.com/cdk/v2/guide/getting_started.html#getting_started_install) installed.
+2. The [AWS CDK](https://docs.aws.amazon.com/cdk/v2/guide/getting_started.html#getting_started_install) installed.
 
-2. The [AWS CLI](https://docs.aws.amazon.com/cli/latest/userguide/getting-started-install.html) installed and configured.
+3. The [AWS CLI](https://docs.aws.amazon.com/cli/latest/userguide/getting-started-install.html) installed and configured.
 
-3. [Docker](https://docs.docker.com/get-docker/) to build an image of the app.
-
-4. An AWS account. Even if you already have an AWS account, we **strongly** recommend creating a new one. That limits the impact of adverse events. You can group accounts within an [AWS Organization](https://docs.aws.amazon.com/controltower/latest/userguide/organizations.html) to avoid having to repeatedly enter your billing details.
+4. [Docker](https://docs.docker.com/get-docker/) to build an image of the app.
 
 ## Deploy to AWS
 
