@@ -142,7 +142,7 @@ routing-stack.AcceleratorhostnameexportthisasAPPHOSTNAME = abcdefghi12345.awsglo
 
 ## Prepare the app for launch
 
-1. Live Beats needs to know its own hostname else it shows a WebSocket error. That's the accelerator's DNS hostname, noted above. For example:
+1. Live Beats needs to know its own hostname else it shows a WebSocket error. That's the accelerator's DNS hostname, noted above:
 
 ```bash
 export APP_HOSTNAME="abcdefghi12345.awsglobalaccelerator.com"
@@ -150,7 +150,7 @@ export APP_HOSTNAME="abcdefghi12345.awsglobalaccelerator.com"
 
 2. Live Beats uses GitHub for authentication. [Create a GitHub OAuth app](https://github.com/settings/applications/new). Give it a name. Set its Homepage URL to e.g `http://abcdefghi12345.awsglobalaccelerator.com` and its authorization callback URL to `http://abcdefghi12345.awsglobalaccelerator.com/oauth/callbacks/github`. Click the green button. You will be shown its client ID. Click the button below that to _Generate a new client secret_.
 
-You can now update the two placeholder secrets `arn:` noted earlier. For example:
+You can now update the two placeholder secrets `arn:` noted earlier:
 
 ```bash
 aws secretsmanager update-secret --secret-id "arn:aws:secretsmanager...the-github-client-id-one" --secret-string "your-github-client-id"
@@ -159,7 +159,7 @@ aws secretsmanager update-secret --secret-id "arn:aws:secretsmanager...the-githu
 
 3. In `lib/appStack.ts`, look for `desiredCount: 0`. Change that to `desiredCount: 1` to try one container in each region (we are not using auto-scaling).
 
-Now re-deploy the app stack in each region. That will start two containers in each region and fetch the just-updated secrets:
+Now re-deploy the app stack in each region. That will start a container and fetch the just-updated secrets:
 
 ```bash
 cdk deploy app-stack-primary
@@ -217,13 +217,13 @@ The best place to start debugging is by looking at the logs. For ECS, it logs to
 17:41:20.679 [info] Running LiveBeatsWeb.Endpoint with cowboy 2.9.0 at 0.0.0.0:4000 (http)
 ```
 
-You will see requests every few seconds to `/signin`. That is the load balancer's health check. For containers to register behind it and be healthy, that needs to report back with a `200` status code:
+You should see requests every few seconds to `/signin`. That is the load balancer's health check. For containers to register behind it and be healthy, that needs to report back with a `200` status code:
 
 ```
 17:41:54.954 request_id=F2WFlghur7wnLQMAAAFy [info] Sent 200 in 1ms
 ```
 
-Any error message should indicate the problem. For example it may complain the database does not exist, or it could not connect to it. You can then investigate (such as whether the security group allows access).
+If not, any error message should indicate the problem. For example it may complain the database does not exist, or that it could not connect to it. You can then investigate (such as whether the security group allows access from the VPC or whether the VPC are correctly peered).
 
 If you see:
 
@@ -231,7 +231,7 @@ If you see:
 17:48:38.799 [error] Could not check origin for Phoenix.Socket transport.
 ```
 
-... _that_ is caused by using a different hostname than the app expects. That results in a WebSocket error (a red panel in the top-right saying "Re-establishing connection"). Make sure the container's `PHX_HOST` environment variable _exactly_ matches the hostname in the browser. In the CDK stack, we set that to the `APP_HOSTNAME`. You should have set that to the accelerator's hostname (as we are not using a custom domain like `example.com`). One thing that is _very_ easy to miss is if the _case_ does not match. For example if the DNS name uses _uppercase_ characters. Browsers can silently convert that to _lowercase_, resulting in the hostname _not_ matching what the app expects (since its case differs).
+... _that_ is likely caused by using a different hostname than the app expects. That results in a WebSocket error (a red panel in the top-right saying "Re-establishing connection"). Make sure the container's `PHX_HOST` environment variable _exactly_ matches the hostname in the browser. In the CDK stack, we set that to the `APP_HOSTNAME`. You should have set that to the accelerator's hostname (as we are not using a custom domain like `example.com`). One thing that is _very_ easy to miss is if the _case_ does not match. For example if the DNS name uses _uppercase_ characters. Browsers can silently convert that to _lowercase_, resulting in the hostname _not_ matching what the app expects (since its case differs).
 
 If you see:
 
