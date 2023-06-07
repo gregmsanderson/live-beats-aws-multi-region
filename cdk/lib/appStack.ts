@@ -489,7 +489,7 @@ export class AppStack extends Stack {
         serviceName: ecsServiceName, // for our custom libcluster strategy
         cluster: ecsCluster,
         taskDefinition,
-        desiredCount: 1, // default is 1. Or can use auto-scaling. Start with 0 just to get the stack deployed, then can increase it
+        desiredCount: 0, // default is 1. Or can use auto-scaling. Start with 0 just to get the stack deployed, then can increase it
         securityGroups: [ecsServiceSecurityGroup], // to e.g permit access only from the load balancer
         assignPublicIp: true, // is this needed?
         circuitBreaker: { rollback: true },
