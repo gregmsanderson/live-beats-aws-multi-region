@@ -37,8 +37,7 @@ export class AllowVPCPeeringDNSResolution extends Construct {
       service: "EC2",
       action: "modifyVpcPeeringConnectionOptions",
       parameters: {
-        VpcPeeringConnectionId: props.vpcPeering.ref,
-        ...props.peeringConnectionOptions, // why? Can't send both else get e.g "Accepter's VPC Peering connection options cannot be modified for a different region"
+        // as with create, trying to change this option for another region throws an error but without a route between VPCs (deleted as part of the same stack), reverting the DNS resolution onDelete back to false (the default) won't matter?
       },
     };
 
