@@ -38,12 +38,7 @@ export class AllowVPCPeeringDNSResolution extends Construct {
       action: "modifyVpcPeeringConnectionOptions",
       parameters: {
         VpcPeeringConnectionId: props.vpcPeering.ref,
-        AccepterPeeringConnectionOptions: {
-          AllowDnsResolutionFromRemoteVpc: false, // the default is false
-        },
-        RequesterPeeringConnectionOptions: {
-          AllowDnsResolutionFromRemoteVpc: false, // the default is false
-        },
+        ...props.peeringConnectionOptions, // why? Can't send both else get e.g "Accepter's VPC Peering connection options cannot be modified for a different region"
       },
     };
 
